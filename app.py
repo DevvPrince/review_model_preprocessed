@@ -1,8 +1,8 @@
 import streamlit as st
-import pickle
+import joblib
 import re
 
-# กำหนดฟังก์ชัน preprocess
+# ฟังก์ชัน preprocess
 def preprocess(text):
     text = re.sub('<[^>]*>', '', text)
     emoticons = re.findall('(?::|;|=)(?:-)?(?:\)|\(|D|P)', text)
@@ -10,9 +10,13 @@ def preprocess(text):
             ' '.join(emoticons).replace('-', ''))
     return text
 
-# โหลดโมเดลและ TfidfVectorizer
-with open('review_nb_model_preprocessed.pkl', 'rb') as f:
-    tfidf, model = pickle.load(f)
+# โหลดโมเดลและ TfidfVectorizer โดยใช้ joblib
+#model_filename = 'review_nb_model_preprocessed.pkl' #เปลี่ยนชื่อไฟล์
+
+model_filename = 'review_model_preprocessed.pkl'
+
+#print(f"Loading model from: {os.path.abspath(model_filename)}")  # แสดงพาธที่กำลังโหลดโมเดล
+tfidf, model = joblib.load(model_filename)
 
 # สร้าง Streamlit UI
 st.title('Review Rating Prediction (Naive Bayes, Preprocessed)')
