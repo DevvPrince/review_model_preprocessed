@@ -1,8 +1,17 @@
 import streamlit as st
 import pickle
+import re
+
+# กำหนดฟังก์ชัน preprocess
+def preprocess(text):
+    text = re.sub('<[^>]*>', '', text)
+    emoticons = re.findall('(?::|;|=)(?:-)?(?:\)|\(|D|P)', text)
+    text = (re.sub('[\W]+', ' ', text.lower()) +
+            ' '.join(emoticons).replace('-', ''))
+    return text
 
 # โหลดโมเดลและ TfidfVectorizer
-with open('review_model_preprocessed.pkl', 'rb') as f:
+with open('review_nb_model_preprocessed.pkl', 'rb') as f:
     tfidf, model = pickle.load(f)
 
 # สร้าง Streamlit UI
